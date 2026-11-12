@@ -1,0 +1,16 @@
+node_modules/
+.next/
+data/
+.env*
+worker/.venv/
+__pycache__/
+*.pyc
+out/
+.DS_Store
+.ruff_cache/
+.pytest_cache/
+!.env.example
+
+# Kept local, not in the public repo
+TASKS.md
+CLAUDE.md

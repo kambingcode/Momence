@@ -1,0 +1,228 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/*
+ * Gaya "Shade" (DESIGN.md): tema terang saja. Varian `dark:` diikat ke kelas `.dark` yang tidak
+ * pernah dipasang, jadi pengaturan gelap sistem tidak berpengaruh.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Palet & bayangan Shade; `static` agar semua variabelnya selalu ada di :root. */
+@theme static {
+  --color-charcoal-ink: #131315;
+  --color-pure-white: #ffffff;
+  --color-bone: #f7f5ff;
+  --color-cutout-gray: #f1f1f1;
+  --color-slate-mid: #717173;
+  --color-hairline: #d0d0d0;
+  --color-deep-charcoal: #444444;
+  /* Violet hanya untuk gradien logo & garis bawah tab aktif; aksen lain = lavender. */
+  --color-logo-violet: #855cf7;
+  --color-lavender-trace: #dacefd;
+
+  /* Offset keras tanpa blur: hanya untuk tombol pil utama (subtle) dan ghost (subtle-2). */
+  --shadow-subtle: rgb(241, 241, 241) 8px 8px 0px 0px;
+  --shadow-subtle-2: rgba(226, 226, 227, 0.5) 10px 10px 0px -2px;
+  --shadow-sm: rgba(19, 19, 21, 0.12) 0px 1px 4px 0px;
+  --shadow-sm-2: rgba(0, 0, 0, 0.2) 0px 3px 4px 0px;
+  /* Garis dalam kartu (menggantikan ring/border luar). */
+  --shadow-subtle-3: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px inset;
+}
+
+@theme {
+  /* Lebar kolom konten halaman (DESIGN.md → Layout). */
+  --container-page: 1200px;
+
+  /*
+   * Dua bobot (Tahap 20, keputusan 3): 400 untuk teks isi & label mono, 500 untuk judul, tombol,
+   * dan item/tab aktif. Kelas yang lebih tebal dibatasi ke 500 sehingga tidak ada teks tebal.
+   */
+  --font-weight-medium: 500;
+  --font-weight-semibold: 500;
+  --font-weight-bold: 500;
+
+  /* Skala radius Shade: 35 (tombol) · 20 (tombol sekunder) · 14 (kartu) · 9 (input) · 2 (tab, chip). */
+  --radius-xs: 2px;
+  --radius-sm: 2px;
+  --radius-md: 9px;
+  --radius-lg: 9px;
+  --radius-xl: 14px;
+  --radius-2xl: 20px;
+  --radius-3xl: 35px;
+  --radius-4xl: 35px;
+
+  /*
+   * Skala teks. Ukuran & tracking mengikuti DESIGN.md; tinggi baris kelas Tailwind tetap bawaan
+   * (teks bantu di alat ini sering lebih dari satu baris, 1.2 terlalu rapat).
+   */
+  --text-xs: 12px;
+  --text-xs--letter-spacing: -0.12px;
+  --text-sm: 14px;
+  --text-sm--letter-spacing: -0.14px;
+  --text-base: 16px;
+  --text-base--letter-spacing: -0.16px;
+  --text-lg: 18px;
+  --text-lg--letter-spacing: -0.18px;
+  --text-xl: 20px;
+  --text-xl--letter-spacing: -0.2px;
+  --text-2xl: 24px;
+  --text-2xl--letter-spacing: -0.24px;
+  --text-3xl: 32px;
+  --text-3xl--letter-spacing: -0.96px;
+  --text-5xl: 48px;
+  --text-5xl--letter-spacing: -1.44px;
+  --text-7xl: 72px;
+  --text-7xl--letter-spacing: -2.16px;
+
+  /* Token bernama dari DESIGN.md (dengan tinggi baris aslinya). */
+  --text-caption: 12px;
+  --text-caption--line-height: 1.2;
+  --text-caption--letter-spacing: -0.12px;
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 1.29;
+  --text-body-sm--letter-spacing: -0.14px;
+  --text-body: 16px;
+  --text-body--line-height: 1.5;
+  --text-body--letter-spacing: -0.16px;
+  --text-subheading: 20px;
+  --text-subheading--line-height: 1.4;
+  --text-subheading--letter-spacing: -0.2px;
+  --text-heading-sm: 24px;
+  --text-heading-sm--line-height: 1.3;
+  --text-heading-sm--letter-spacing: -0.24px;
+  --text-heading: 32px;
+  --text-heading--line-height: 1.22;
+  --text-heading--letter-spacing: -0.96px;
+  --text-heading-lg: 48px;
+  --text-heading-lg--line-height: 1.15;
+  --text-heading-lg--letter-spacing: -1.44px;
+  --text-display: 72px;
+  --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -2.16px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* Inter (opsz otomatis: tampil sebagai "Inter Display" pada ukuran besar) & JetBrains Mono. */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-foreground: var(--primary-soft-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+}
+
+:root {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #131315;
+  --card: #ffffff;
+  --card-foreground: #131315;
+  --popover: #ffffff;
+  --popover-foreground: #131315;
+  /* Aksi utama = charcoal; violet tidak pernah menjadi isi permukaan. */
+  --primary: #131315;
+  --primary-foreground: #ffffff;
+  /* Latar seleksi/sorotan lembut = lavender; teks di atasnya tetap charcoal. */
+  --primary-soft: #dacefd;
+  --primary-soft-foreground: #131315;
+  --secondary: #f7f5ff;
+  --secondary-foreground: #131315;
+  --muted: #f7f5ff;
+  --muted-foreground: #717173;
+  --accent: #f7f5ff;
+  --accent-foreground: #131315;
+  /* Satu-satunya warna jenuh di luar logo: aksi berbahaya & pesan galat. */
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: #d0d0d0;
+  --input: #444444;
+  --ring: #131315;
+  /* Belum dipakai dashboard (status monokrom); masih dipakai halaman lain sampai didesain ulang. */
+  --success: oklch(0.596 0.127 163.2);
+  --warning: oklch(0.555 0.146 49);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: #f7f5ff;
+  --sidebar-foreground: #131315;
+  --sidebar-primary: #131315;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f7f5ff;
+  --sidebar-accent-foreground: #131315;
+  --sidebar-border: #d0d0d0;
+  --sidebar-ring: #131315;
+}
+
+/* Label mono (eyebrow, timestamp, teks lencana): JetBrains Mono 14px, tracking -0.04em. */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.29;
+  letter-spacing: -0.04em;
+  font-feature-settings: normal;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  /* Pengguna yang meminta gerak minimal: transisi & animasi (spinner, dialog) dihentikan. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  html {
+    @apply font-sans;
+    font-optical-sizing: auto;
+    font-feature-settings:
+      "ss01", "ss07", "ss08", "cv03", "cv04", "cv09", "cv11", "blwf";
+  }
+  body {
+    @apply bg-background text-foreground;
+    letter-spacing: -0.01em;
+  }
+  b,
+  strong {
+    font-weight: inherit;
+  }
+}

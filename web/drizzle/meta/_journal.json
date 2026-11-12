@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1792506797524,
+      "tag": "0000_majestic_human_cannonball",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792603055812,
+      "tag": "0001_clip_reframes",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792603801574,
+      "tag": "0002_clip_reframe_crops",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1792643809642,
+      "tag": "0003_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1792720166911,
+      "tag": "0004_clip_focus",
+      "breakpoints": true
+    }
+  ]
+}

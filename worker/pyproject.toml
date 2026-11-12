@@ -1,0 +1,155 @@
+[project]
+name = "clipstudio-worker"
+version = "0.1.0"
+description = "ClipStudio worker (ffmpeg, Whisper, MediaPipe)"
+authors = [
+    { name = "kambingcode", email = "frewin.saputra@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "google-genai>=2.33.0",
+    "mediapipe>=1.1.1",
+    "mlx-whisper>=0.4.3",
+    "numpy>=2.5.4",
+    "pydantic>=2.14.1",
+    "python-dotenv>=1.2.4",
+    "scenedetect>=0.7.2",
+    "silero-vad>=6.2.3",
+    "sqlalchemy>=2",
+    "structlog>=26.1.0",
+    "typer>=0.27.3",
+    "yt-dlp[default]>=2026.10.21",
+]
+
+[project.scripts]
+worker = "clipstudio_worker.cli:app"
+
+[tool.uv]
+# PySceneDetect menarik opencv-python, MediaPipe menarik opencv-contrib-python; keduanya mengisi
+# paket `cv2` yang sama dan saling menimpa. Pakai hanya versi contrib (superset).
+override-dependencies = ["opencv-python; sys_platform == 'never'"]
+
+[build-system]
+requires = ["uv_build>=0.8.17,<0.9.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.15.1",
+    "import-linter>=2.15",
+    "pyright>=1.1.414",
+    "pytest>=9.1.1",
+    "ruff>=0.17.1",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+# Teks berbahasa Indonesia memakai en dash (0–100).
+ignore = ["RUF001", "RUF002", "RUF003"]
+
+[tool.pyright]
+include = ["src", "tests"]
+pythonVersion = "3.12"
+typeCheckingMode = "strict"
+venvPath = "."
+venv = ".venv"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+# Aturan lapisan Clean Architecture (lihat TASKS.md → "Arsitektur").
+[tool.importlinter]
+root_package = "clipstudio_worker"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Lapisan per modul: infrastructure → application → domain"
+type = "layers"
+containers = ["clipstudio_worker.modules.*"]
+layers = ["infrastructure", "application", "domain"]
+
+[[tool.importlinter.contracts]]
+name = "Domain murni: tanpa framework, SDK, atau I/O"
+type = "forbidden"
+source_modules = ["clipstudio_worker.modules.*.domain"]
+forbidden_modules = ["pydantic", "sqlalchemy", "typer", "structlog", "os", "pathlib", "subprocess", "shutil", "clipstudio_worker.shared", "clipstudio_worker.config"]
+
+[[tool.importlinter.contracts]]
+name = "Application tanpa framework, SDK, atau I/O langsung"
+type = "forbidden"
+source_modules = ["clipstudio_worker.modules.*.application"]
+forbidden_modules = ["sqlalchemy", "typer", "structlog", "os", "subprocess", "shutil", "clipstudio_worker.config"]
+
+[[tool.importlinter.contracts]]
+name = "Modul tidak bergantung pada presentation / composition root"
+type = "forbidden"
+source_modules = ["clipstudio_worker.modules", "clipstudio_worker.shared"]
+forbidden_modules = ["clipstudio_worker.cli", "clipstudio_worker.bootstrap"]
+
+[[tool.importlinter.contracts]]
+name = "Presentation (CLI) tidak menyentuh adapter"
+type = "forbidden"
+source_modules = ["clipstudio_worker.cli"]
+forbidden_modules = ["clipstudio_worker.modules.*.infrastructure"]
+# Lewat bootstrap (composition root) boleh; yang dilarang hanya impor langsung.
+allow_indirect_imports = true
+
+# Satu kontrak per modul: internal modul hanya boleh diimpor dari dalam modul itu sendiri
+# (+ bootstrap untuk wiring adapter). Modul lain memakai paket application-nya.
+[[tool.importlinter.contracts]]
+name = "Modul jobs hanya diakses lewat API publik"
+type = "protected"
+protected_modules = ["clipstudio_worker.modules.jobs.domain", "clipstudio_worker.modules.jobs.infrastructure", "clipstudio_worker.modules.jobs.application.*"]
+allowed_importers = ["clipstudio_worker.modules.jobs", "clipstudio_worker.bootstrap"]
+
+[[tool.importlinter.contracts]]
+name = "Modul projects hanya diakses lewat API publik"
+type = "protected"
+protected_modules = ["clipstudio_worker.modules.projects.domain", "clipstudio_worker.modules.projects.infrastructure", "clipstudio_worker.modules.projects.application.*"]
+allowed_importers = ["clipstudio_worker.modules.projects", "clipstudio_worker.bootstrap"]
+
+[[tool.importlinter.contracts]]
+name = "Modul transcript hanya diakses lewat API publik"
+type = "protected"
+protected_modules = ["clipstudio_worker.modules.transcript.domain", "clipstudio_worker.modules.transcript.infrastructure", "clipstudio_worker.modules.transcript.application.*"]
+allowed_importers = ["clipstudio_worker.modules.transcript", "clipstudio_worker.bootstrap"]
+
+[[tool.importlinter.contracts]]
+name = "Modul clips hanya diakses lewat API publik"
+type = "protected"
+protected_modules = ["clipstudio_worker.modules.clips.domain", "clipstudio_worker.modules.clips.infrastructure", "clipstudio_worker.modules.clips.application.*"]
+allowed_importers = ["clipstudio_worker.modules.clips", "clipstudio_worker.bootstrap"]
+
+[[tool.importlinter.contracts]]
+name = "Modul render hanya diakses lewat API publik"
+type = "protected"
+protected_modules = ["clipstudio_worker.modules.render.domain", "clipstudio_worker.modules.render.infrastructure", "clipstudio_worker.modules.render.application.*"]
+allowed_importers = ["clipstudio_worker.modules.render", "clipstudio_worker.bootstrap"]
+
+[[tool.importlinter.contracts]]
+name = "Modul reframe hanya diakses lewat API publik"
+type = "protected"
+protected_modules = ["clipstudio_worker.modules.reframe.domain", "clipstudio_worker.modules.reframe.infrastructure", "clipstudio_worker.modules.reframe.application.*"]
+allowed_importers = ["clipstudio_worker.modules.reframe", "clipstudio_worker.bootstrap"]
+
+[[tool.importlinter.contracts]]
+name = "Modul broll hanya diakses lewat API publik"
+type = "protected"
+protected_modules = ["clipstudio_worker.modules.broll.domain", "clipstudio_worker.modules.broll.infrastructure", "clipstudio_worker.modules.broll.application.*"]
+allowed_importers = ["clipstudio_worker.modules.broll", "clipstudio_worker.bootstrap"]
+
+[[tool.importlinter.contracts]]
+name = "Modul social hanya diakses lewat API publik"
+type = "protected"
+protected_modules = ["clipstudio_worker.modules.social.domain", "clipstudio_worker.modules.social.infrastructure", "clipstudio_worker.modules.social.application.*"]
+allowed_importers = ["clipstudio_worker.modules.social", "clipstudio_worker.bootstrap"]
+
+[[tool.importlinter.contracts]]
+name = "Modul settings hanya diakses lewat API publik"
+type = "protected"
+protected_modules = ["clipstudio_worker.modules.settings.domain", "clipstudio_worker.modules.settings.infrastructure", "clipstudio_worker.modules.settings.application.*"]
+allowed_importers = ["clipstudio_worker.modules.settings", "clipstudio_worker.bootstrap"]
